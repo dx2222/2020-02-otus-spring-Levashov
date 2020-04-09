@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
