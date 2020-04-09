@@ -1,0 +1,9 @@
+
+${AnsiBackground.GREEN}
+ ____  __  __  ___   ___
+|  _ \ \ \/ / |   | |   |
+| | | | \  /     /     /
+| |_| | /  \    /     /
+|____/ /_/\_\  /___  /___ 
+
+${AnsiBackground.DEFAULT}

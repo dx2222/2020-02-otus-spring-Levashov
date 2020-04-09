@@ -1,0 +1,5 @@
+application:
+  fileName: "testdata"
+  locale: en_US
+  numberCorrectAnswers: 4
+
