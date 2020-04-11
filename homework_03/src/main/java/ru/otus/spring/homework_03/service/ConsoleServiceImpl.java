@@ -3,16 +3,16 @@ package ru.otus.spring.homework_03.service;
 import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.homework_03.config.ApplicationSettings;
 import ru.otus.spring.homework_03.domain.Question;
 import ru.otus.spring.homework_03.domain.Student;
+import ru.otus.spring.homework_03.domain.TxtConst;
 
 @Service
 public class ConsoleServiceImpl implements ConsoleService {
 
-    private final MessageSource messageSource;
+    private final MyMessageSource mymessageSource;
 
     private final IOService ioService;
 
@@ -20,18 +20,17 @@ public class ConsoleServiceImpl implements ConsoleService {
     private ApplicationSettings settings;
 
     @Autowired
-    public ConsoleServiceImpl(IOService ioService, MessageSource messageSource) {
-        this.ioService = ioService;
-        this.messageSource = messageSource;
+    public ConsoleServiceImpl(IOService ioService, MyMessageSource mymessageSource) {
+        this.ioService       = ioService;
+        this.mymessageSource = mymessageSource;
     }
-
 
     public Student askName() {
 
-        ioService.printOut(messageSource.getMessage("exam.surname",null, settings.getLocale() ));
+        ioService.printOut(mymessageSource.getMessage(TxtConst.EXAM_SURNAME));
         String surName = ioService.readString();
 
-        ioService.printOut(messageSource.getMessage("exam.firstname",null, settings.getLocale() ));
+        ioService.printOut(mymessageSource.getMessage(TxtConst.EXAM_FIRSTNAME ));
         String firstName = ioService.readString();
 
         return new Student(surName, firstName);
@@ -39,7 +38,7 @@ public class ConsoleServiceImpl implements ConsoleService {
 
     public boolean askQuestion( Question question, int number) throws UnsupportedEncodingException {
 
-        ioService.printOutLn(messageSource.getMessage("exam.question",new String [] {String.valueOf(number)}, settings.getLocale() ) + question.getQuestion()+"?");
+        ioService.printOutLn(mymessageSource.getMessage(TxtConst.EXAM_QUESTION,new String [] {String.valueOf(number)}) + question.getQuestion()+"?");
 
         int i = 0;
         for (String curAnswer : question.getPossibleAnswer()) {
@@ -48,18 +47,18 @@ public class ConsoleServiceImpl implements ConsoleService {
                 ioService.printOutLn(i + " - " + curAnswer);
             }
         }
-        ioService.printOut(messageSource.getMessage("exam.answer",null, settings.getLocale() ));
+        ioService.printOut(mymessageSource.getMessage(TxtConst.EXAM_ANSWER ));
 
         return question.getRightAnswer().trim().toLowerCase().equals(ioService.readString().trim().toLowerCase());
     }
 
     public void printResult(int testResult) {
 
-        ioService.printOutLn(messageSource.getMessage("exam.result",null, settings.getLocale() )+testResult);
+        ioService.printOutLn(mymessageSource.getMessage(TxtConst.EXAM_RESULT)+testResult);
         if (testResult >= settings.getNumberCorrectAnswers()) {
-            ioService.printOutLn(messageSource.getMessage("test.passed.successfully",null, settings.getLocale() ));
+            ioService.printOutLn(mymessageSource.getMessage(TxtConst.TEST_PASSED_SUCCESSFULLY));
         } else {
-            ioService.printOutLn(messageSource.getMessage("test.failed",null, settings.getLocale() ));
+            ioService.printOutLn(mymessageSource.getMessage(TxtConst.TEST_FAILED));
         }
     }
 

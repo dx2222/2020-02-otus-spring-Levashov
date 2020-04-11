@@ -43,9 +43,6 @@ class ConsoleServiceImplTest {
 
         Mockito.when(ioMock.readString()).thenReturn(SURNAME).thenReturn(FIRSTNAME);
 
-        Mockito.doNothing().when(ioMock).printOut(Mockito.anyString());
-        Mockito.doNothing().when(ioMock).printOutLn(Mockito.anyString());
-
         Student student = console.askName();
 
         assertThat(student)
@@ -58,9 +55,6 @@ class ConsoleServiceImplTest {
     public void askQuestionTest() {
 
         Mockito.when(ioMock.readString()).thenReturn(RIGHTANSWER);
-
-        Mockito.doNothing().when(ioMock).printOut(Mockito.anyString());
-        Mockito.doNothing().when(ioMock).printOutLn(Mockito.anyString());
 
         Mockito.when(msMock.getMessage(Mockito.anyString(), Mockito.any(), Mockito.any(Locale.class))).thenReturn(QUESTION);
         boolean res = false;

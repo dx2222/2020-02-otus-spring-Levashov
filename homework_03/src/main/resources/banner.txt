@@ -1,5 +1,5 @@
 
-${AnsiBackground.GREEN}
+${AnsiBackground.RED}
  ____  __  __  ___   ___
 |  _ \ \ \/ / |   | |   |
 | | | | \  /     /     /
