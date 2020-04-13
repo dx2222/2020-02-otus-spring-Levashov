@@ -6,16 +6,17 @@ import org.springframework.stereotype.Service;
 import ru.otus.spring.homework_03.config.ApplicationSettings;
 
 @Service
-public class MyMessageSourceImpl implements MyMessageSource {
+public class MessageServiceImpl implements MessageService {
 
     private final MessageSource messageSource;
 
     @Autowired
     private ApplicationSettings settings;
 
-    public MyMessageSourceImpl(MessageSource messageSource){
+    public MessageServiceImpl(MessageSource messageSource){
         this.messageSource = messageSource;
     }
+
     public String getMessage(String var1) {
         return messageSource.getMessage(var1,null, settings.getLocale());
     }

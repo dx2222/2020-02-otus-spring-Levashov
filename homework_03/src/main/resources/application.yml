@@ -6,3 +6,8 @@ application:
 messagesource:
   basename: "/i18n/bundle"
   defaultEncoding: "UTF-8"
+
+spring:
+  messages:
+    basename: "/i18n/bundle"
+    defaultencoding: "UTF-8"
