@@ -1,0 +1,13 @@
+spring:
+  shell:
+    interactive:
+      enabled: false
+
+application:
+  fileName: "testdata"
+  locale: en_US
+  numberCorrectAnswers: 4
+
+messagesource:
+  basename: "/i18n/bundle"
+  defaultEncoding: "UTF-8"
