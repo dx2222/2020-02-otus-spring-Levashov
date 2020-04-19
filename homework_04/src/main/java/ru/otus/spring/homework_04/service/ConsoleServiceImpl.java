@@ -4,13 +4,12 @@ import java.io.UnsupportedEncodingException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.standard.ShellComponent;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.homework_04.domain.Question;
 import ru.otus.spring.homework_04.domain.Student;
 import ru.otus.spring.homework_04.domain.TxtConst;
 
-
-@ShellComponent
+@Service
 @RequiredArgsConstructor
 public class ConsoleServiceImpl implements ConsoleService {
 
