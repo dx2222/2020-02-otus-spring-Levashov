@@ -1,0 +1,17 @@
+application:
+  locale: ru_RU
+
+spring:
+  messages:
+    basename: i18n.bundle
+    defaultencoding: "UTF-8"
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+    driver-class-name: org.h2.Driver
+    schema: schema.sql
+    data: data.sql
+
+logging:
+  level:
+    ROOT: INFO
