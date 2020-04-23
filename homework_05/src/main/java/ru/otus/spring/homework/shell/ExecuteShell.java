@@ -1,13 +1,10 @@
 package ru.otus.spring.homework.shell;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.otus.spring.homework.dao.*;
 import ru.otus.spring.homework.domain.TxtConst;
 import ru.otus.spring.homework.service.BookService;
-import ru.otus.spring.homework.service.ConsoleService;
 import ru.otus.spring.homework.service.MessageService;
 
 @ShellComponent
