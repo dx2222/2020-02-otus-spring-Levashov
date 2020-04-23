@@ -1,15 +1,12 @@
 package ru.otus.spring.homework.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.otus.spring.homework.Exceptions.AuthorExistException;
+import ru.otus.spring.homework.Exceptions.EntityExistException;
 import ru.otus.spring.homework.domain.Author;
-import ru.otus.spring.homework.domain.TxtConst;
-import ru.otus.spring.homework.service.MessageService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,17 +16,14 @@ import java.util.*;
 @Repository
 public class AuthorDaoJdbc implements AuthorDao {
 
-    private final MessageService messageService;
-
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
-    public AuthorDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations,  MessageService messageService) {
+    public AuthorDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations) {
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
-        this.messageService = messageService;
     }
 
     @Override
-    public Author insert(Author author) throws AuthorExistException {
+    public Author insert(Author author) throws EntityExistException {
         if (countByName(author.getName()) == 0){
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("name", author.getName());
@@ -42,7 +36,7 @@ public class AuthorDaoJdbc implements AuthorDao {
             author.setAuthorID((Long) key.getKey());
             return author;
         } else {
-            throw new AuthorExistException(messageService.getMessage(TxtConst.AUTHOR_EXISTS_ERROR,new String [] {author.getName()}));
+            throw new EntityExistException("Error author insert. Author exists "+author.getName());
         }
 
     }
@@ -90,11 +84,23 @@ public class AuthorDaoJdbc implements AuthorDao {
     public Author getAuthorByName(String name) {
         try {
                 return namedParameterJdbcOperations.queryForObject(
-                        "select * from TAUTHOR where name = :name",
+                        "select authorID, name from TAUTHOR where name = :name",
                          Collections.singletonMap("name", name), new AuthorMapper());
             } catch (Exception e) {
                  return null;
             }
+    }
+
+    @Override
+    public List<Author> findAuthorByBookID(Long bookID) {
+        return namedParameterJdbcOperations.query(
+                "select a.authorID, a.name  " +
+                        "  from TBOOKAUTHOR ba" +
+                        " inner join TAUTHOR a" +
+                        "    on a.authorID = ba.authorID" +
+                        " where ba.bookID = :bookID"+
+                        " order by a.name",
+                Collections.singletonMap("bookID", bookID), new AuthorDaoJdbc.AuthorMapper());
     }
 
     private static class AuthorMapper implements RowMapper<Author> {

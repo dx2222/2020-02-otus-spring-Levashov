@@ -2,9 +2,7 @@ package ru.otus.spring.homework.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.homework.Exceptions.AuthorExistException;
-import ru.otus.spring.homework.Exceptions.BookExistException;
-import ru.otus.spring.homework.Exceptions.GenreExistException;
+import ru.otus.spring.homework.Exceptions.EntityExistException;
 import ru.otus.spring.homework.dao.*;
 import ru.otus.spring.homework.domain.*;
 
@@ -16,8 +14,6 @@ public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final AuthorDao authorDao;
     private final GenreDao genreDao;
-    private final BookAuthorDao bookAuthorDao;
-    private final BookGenreDao bookGenreDao;
     private final ConsoleService consoleService;
     private final MessageService messageService;
 
@@ -25,78 +21,47 @@ public class BookServiceImpl implements BookService {
     public BookServiceImpl(BookDao bookDao,
                            AuthorDao authorDao,
                            GenreDao genreDao,
-                           BookAuthorDao bookAuthorDao,
-                           BookGenreDao bookGenreDao,
                            ConsoleService consoleService,
                            MessageService messageService) {
         this.bookDao   = bookDao;
         this.authorDao = authorDao;
         this.genreDao  = genreDao;
-        this.bookAuthorDao = bookAuthorDao;
-        this.bookGenreDao  = bookGenreDao;
         this.consoleService = consoleService;
         this.messageService = messageService;
     }
 
     public void insertBook() {
-        String bookName = consoleService.ReadBookName();
+        String bookName = consoleService.readBookName();
 
-        List<Author> authors = Author.getAuthorList(consoleService.ReadAuthor().split(","));
+        List<Author> authors = Author.getAuthorList(consoleService.readAuthor().split(","));
 
-        List<Genre>  genres = Genre.getGenreList(consoleService.ReadAGenre().split(","));
+        List<Genre>  genres = Genre.getGenreList(consoleService.readAGenre().split(","));
 
         try {
             Book book = bookDao.insert(new Book(0L,bookName,  authors ,  genres));
-            bookAuthorDao.deleteByBookID(book.getBookID());
-            for (Author curAuthor:book.getAuthors()) {
-                if (authorDao.getAuthorByName(curAuthor.getName()) == null) {
-                    try {
-                        Author author = authorDao.insert(curAuthor);
-                        bookAuthorDao.insertBookAuthor(book.getBookID(),author.getAuthorID());
-                    } catch (AuthorExistException e) {
-                        throw new BookExistException(messageService.getMessage(TxtConst.AUTHOR_INSERT_ERROR,new String [] {curAuthor.getName()}));
-                    }
-                }
-            }
 
-            bookGenreDao.deleteByBookID(book.getBookID());
+            consoleService.showBook(bookDao.getBookByID(book.getBookID()));
 
-            for (Genre curGenre:book.getGenres()) {
-                if (genreDao.getGenreByName(curGenre.getName()) == null) {
-                    try {
-                        Genre genre = genreDao.insert(curGenre);
-                        bookGenreDao.insertBookGenre(book.getBookID(),genre.getGenreID());
-                    } catch (GenreExistException e) {
-                        throw new BookExistException(messageService.getMessage(TxtConst.GENRE_INSERT_ERROR,new String [] {curGenre.getName()}));
-                    }
-                }
-            }
-
-            Book booknew = bookDao.getBookByID(book.getBookID());
-            getBookList(booknew);
-            consoleService.ShowBook(booknew);
-
-        } catch (BookExistException e) {
+        } catch (EntityExistException e) {
              consoleService.bookErrorInsert(e.getMessage());
         }
     }
 
     public void updateBook() {
-        Long bookID = consoleService.ReadBookID();
+        Long bookID = consoleService.readBookID();
         Book book = bookDao.getBookByID(bookID);
         boolean updateed = false;
 
         if (book != null) {
-            getBookList(book);
-            consoleService.ShowBookOld(book);
-            String bookName = consoleService.ReadBookName();
+            consoleService.showBookOld(book);
+            String bookName = consoleService.readBookName();
             if (!bookName.trim().equals("")) {
                 book.setName(bookName);
                 updateed = true;
             }
 
-            consoleService.ShowBookOldAuthors(book);
-            String authors = consoleService.ReadAuthor();
+            consoleService.showBookOldAuthors(book);
+            String authors = consoleService.readAuthor();
             if (!authors.trim().equals("")) {
                 List<Author> authorsList = Author.getAuthorList(authors.split(","));
                 book.setAuthors(authorsList);
@@ -104,8 +69,8 @@ public class BookServiceImpl implements BookService {
             }
 
 
-            consoleService.ShowBookOldGenres(book);
-            String genres = consoleService.ReadAGenre();
+            consoleService.showBookOldGenres(book);
+            String genres = consoleService.readAGenre();
             if (!genres.trim().equals("")) {
                 List<Genre> genresList = Genre.getGenreList(genres.split(","));
                 book.setGenres(genresList);
@@ -117,37 +82,9 @@ public class BookServiceImpl implements BookService {
                 try {
                     bookDao.update(book);
 
-                    bookAuthorDao.deleteByBookID(book.getBookID());
+                    consoleService.showBook(bookDao.getBookByID(bookID));
 
-                    for (Author curAuthor:book.getAuthors()) {
-                        if (authorDao.getAuthorByName(curAuthor.getName()) == null) {
-                            try {
-                                Author author = authorDao.insert(curAuthor);
-                                bookAuthorDao.insertBookAuthor(book.getBookID(),author.getAuthorID());
-                            } catch (AuthorExistException e) {
-                                throw new BookExistException(messageService.getMessage(TxtConst.AUTHOR_INSERT_ERROR,new String [] {curAuthor.getName()}));
-                            }
-                        }
-                    }
-
-                    bookGenreDao.deleteByBookID(book.getBookID());
-
-                    for (Genre curGenre:book.getGenres()) {
-                        if (genreDao.getGenreByName(curGenre.getName()) == null) {
-                            try {
-                                Genre genre = genreDao.insert(curGenre);
-                                bookGenreDao.insertBookGenre(book.getBookID(),genre.getGenreID());
-                            } catch (GenreExistException e) {
-                                throw new BookExistException(messageService.getMessage(TxtConst.GENRE_INSERT_ERROR,new String [] {curGenre.getName()}));
-                            }
-                        }
-                    }
-
-                    Book bookupd = bookDao.getBookByID(bookID);
-                    getBookList(bookupd);
-                    consoleService.ShowBook(bookupd);
-
-                } catch (BookExistException e) {
+                } catch (EntityExistException e) {
                     consoleService.bookErrorInsert(e.getMessage());
                 }
             }
@@ -156,7 +93,7 @@ public class BookServiceImpl implements BookService {
 
 
     public void deleteBook() {
-        Long bookID = consoleService.ReadBookID();
+        Long bookID = consoleService.readBookID();
         Book book =  bookDao.getBookByID(bookID);
 
         if (book != null) {
@@ -167,54 +104,42 @@ public class BookServiceImpl implements BookService {
     }
 
     public void selectBookByID(){
-      Long bookID = consoleService.ReadBookID();
+      Long bookID = consoleService.readBookID();
       Book book =  bookDao.getBookByID(bookID);
       if (book != null) {
-          consoleService.ShowBook(book);
+          consoleService.showBook(book);
       } else {
           consoleService.bookNotExists();
       }
     }
 
-    private void getBookList(Book book) {
-        book.setAuthors(bookAuthorDao.findByBookID(book.getBookID()));
-        book.setGenres(bookGenreDao.findByBookID(book.getBookID()));
-    }
-
-
-    private List<Book> getLists(List<Book> books) {
-        for (Book curBook:books) {
-            getBookList(curBook);
-        }
-        return books;
-    }
 
     public void findAllBook() {
-        consoleService.ShowBooks(getLists(bookDao.findAll()));
+        consoleService.showBooks(bookDao.findAll());
     }
 
     public void findAllAuthor() {
-        consoleService.ShowAuthors(authorDao.findAll());
+        consoleService.showAuthors(authorDao.findAll());
     }
 
     public void findAllGenre() {
-        consoleService.ShowGenres(genreDao.findAll());
+        consoleService.showGenres(genreDao.findAll());
     }
 
 
     public void findAllBookByName() {
-        String bookName = consoleService.ReadBookName();
-        consoleService.ShowBooks(getLists(bookDao.findAllByName(bookName)));
+        String bookName = consoleService.readBookName();
+        consoleService.showBooks(bookDao.findAllByName(bookName));
     }
 
     public void findAllBookByAuthor() {
-        String author = consoleService.ReadAuthor();
-        consoleService.ShowBooks(getLists(bookDao.findAllByAuthor(author)));
+        String author = consoleService.readAuthor();
+        consoleService.showBooks(bookDao.findAllByAuthor(author));
     }
 
     public void findAllBookByGenre() {
-        String genre = consoleService.ReadAGenre();
-        consoleService.ShowBooks(getLists(bookDao.findAllByGenre(genre)));
+        String genre = consoleService.readAGenre();
+        consoleService.showBooks(bookDao.findAllByGenre(genre));
     }
 
 

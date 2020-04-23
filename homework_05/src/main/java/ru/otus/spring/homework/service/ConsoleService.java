@@ -7,18 +7,18 @@ import java.util.List;
 
 public interface ConsoleService {
 
-    String ReadBookName();
-    String ReadAuthor();
-    String ReadAGenre();
-    Long ReadBookID();
-    void ShowBooks(List<Book> books);
-    void ShowAuthors(List<Author> authors);
-    void ShowGenres(List<Genre> genres);
-    void ShowBook(Book book);
+    String readBookName();
+    String readAuthor();
+    String readAGenre();
+    Long readBookID();
+    void showBooks(List<Book> books);
+    void showAuthors(List<Author> authors);
+    void showGenres(List<Genre> genres);
+    void showBook(Book book);
 
-    void ShowBookOldAuthors(Book book);
-    void ShowBookOldGenres(Book book);
-    void ShowBookOld(Book book);
+    void showBookOldAuthors(Book book);
+    void showBookOldGenres(Book book);
+    void showBookOld(Book book);
 
     void bookErrorInsert(String message);
     void bookError(String message);

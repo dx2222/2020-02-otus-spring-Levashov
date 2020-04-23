@@ -10,15 +10,8 @@ public final class TxtConst {
     public static final String AUTHOR_NAME_OLD = "author.name.old";
     public static final String GENRE_NAME_OLD = "genre.name.old";
 
-    public static final String BOOK_EXISTS_ERROR = "book.exists";
     public static final String BOOK_INSERT_ERROR = "book.error.insert";
     public static final String BOOK_NOTEXISTS = "book.notexists";
-
-    public static final String AUTHOR_EXISTS_ERROR = "author.exists";
-    public static final String AUTHOR_INSERT_ERROR = "author.error.insert";
-
-    public static final String GENRE_EXISTS_ERROR = "genre.exists";
-    public static final String GENRE_INSERT_ERROR = "genre.error.insert";
 
     public static final String SELECTED_ALL_BOOK = "selected.all.book";
     public static final String SELECTED_ALL_AUTHOR = "selected.all.author";

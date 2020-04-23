@@ -1,6 +1,5 @@
 package ru.otus.spring.homework.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -8,8 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.homework.Exceptions.*;
 import ru.otus.spring.homework.domain.Genre;
-import ru.otus.spring.homework.domain.TxtConst;
-import ru.otus.spring.homework.service.MessageService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,17 +17,14 @@ import java.util.List;
 @Repository
 public class GenreDaoJdbc implements GenreDao {
 
-    private final MessageService messageService;
-
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
-    public GenreDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations,  MessageService messageService) {
+    public GenreDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations) {
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
-        this.messageService = messageService;
     }
 
     @Override
-    public Genre insert(Genre genre) throws GenreExistException{
+    public Genre insert(Genre genre) throws EntityExistException{
         if (countByName(genre.getName()) == 0){
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("name", genre.getName());
@@ -42,7 +36,7 @@ public class GenreDaoJdbc implements GenreDao {
             genre.setGenreID((Long) key.getKey());
             return genre;
         } else  {
-            throw new GenreExistException(messageService.getMessage(TxtConst.GENRE_EXISTS_ERROR,new String [] {genre.getName()}));
+            throw new EntityExistException("Error genre insert. Genre exists "+genre.getName());
         }
     }
 
@@ -89,12 +83,24 @@ public class GenreDaoJdbc implements GenreDao {
     public Genre getGenreByName(String name) {
         try {
             return namedParameterJdbcOperations.queryForObject(
-                    "select * from TGENRE where name = :name",
+                    "select genreID, name from TGENRE where name = :name",
                     Collections.singletonMap("name", name), new GenreMapper());
         }
         catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public List<Genre> findGenreByBookID(Long bookID) {
+        return namedParameterJdbcOperations.query(
+                "select g.genreID, g.name " +
+                        "  from TBOOKGENRE ba" +
+                        " inner join TGENRE g" +
+                        "    on g.genreID = ba.genreID" +
+                        " where ba.bookID = :bookID"+
+                        " order by g.name",
+                Collections.singletonMap("bookID", bookID), new GenreDaoJdbc.GenreMapper());
     }
 
     private static class GenreMapper implements RowMapper<Genre> {

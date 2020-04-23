@@ -53,12 +53,6 @@ class BookServiceImplTest {
     private BookDao bookDao;
 
     @MockBean
-    private  BookAuthorDao bookAuthorDao;
-
-    @MockBean
-    private  BookGenreDao bookGenreDao;
-
-    @MockBean
     private ConsoleServiceImpl console;
 
     @Autowired
@@ -69,11 +63,11 @@ class BookServiceImplTest {
 
     @Test
     @DisplayName("добавление книги")
-    void insert() throws BookExistException, AuthorExistException, GenreExistException {
+    void insert() throws EntityExistException {
 
-        Mockito.when(console.ReadBookName()).thenReturn(DEAULT_BOOK_NAME);
-        Mockito.when(console.ReadAuthor()).thenReturn(DEFAULT_AUTHOR_NAME);
-        Mockito.when(console.ReadAGenre()).thenReturn(DEFAULT_GENRE_NAME);
+        Mockito.when(console.readBookName()).thenReturn(DEAULT_BOOK_NAME);
+        Mockito.when(console.readAuthor()).thenReturn(DEFAULT_AUTHOR_NAME);
+        Mockito.when(console.readAGenre()).thenReturn(DEFAULT_GENRE_NAME);
 
         Author author = new Author(DEFAULT_AUTHOR_ID, DEFAULT_AUTHOR_NAME);
         Genre genre = new Genre(DEFAULT_GENRE_ID, DEFAULT_GENRE_NAME);
@@ -92,16 +86,13 @@ class BookServiceImplTest {
         Mockito.when(authorDao.insert(any())).thenReturn(author);
         Mockito.when(genreDao.insert(any())).thenReturn(genre);
         Mockito.when(bookDao.getBookByID(any())).thenReturn(book);
-        Mockito.when(bookAuthorDao.findByBookID(book.getBookID())).thenReturn(authors);
-        Mockito.when(bookGenreDao.findByBookID(book.getBookID())).thenReturn(genres);
+        Mockito.when(authorDao.findAuthorByBookID(book.getBookID())).thenReturn(authors);
+        Mockito.when(genreDao.findGenreByBookID(book.getBookID())).thenReturn(genres);
 
         bookService.insertBook();
 
-        Mockito.verify(bookAuthorDao).deleteByBookID(any());
-        Mockito.verify(bookGenreDao).deleteByBookID(any());
-
         ArgumentCaptor<Book> argument = ArgumentCaptor.forClass(Book.class);
-        Mockito.verify(console).ShowBook(argument.capture());
+        Mockito.verify(console).showBook(argument.capture());
 
         assertEquals(DEAULT_BOOK_NAME, argument.getValue().getName());
         assertEquals(DEFAULT_AUTHOR_ID, argument.getValue().getAuthors().get(0).getAuthorID());

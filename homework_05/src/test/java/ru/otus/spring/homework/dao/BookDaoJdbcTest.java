@@ -5,14 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.spring.homework.config.ApplicationSettings;
 import ru.otus.spring.homework.domain.*;
 import ru.otus.spring.homework.Exceptions.*;
-import ru.otus.spring.homework.service.MessageService;
 import ru.otus.spring.homework.service.MessageServiceImpl;
 
 import java.util.ArrayList;
@@ -23,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("DAO для работы с книгами ")
 @ExtendWith(SpringExtension.class)
 @JdbcTest
-@Import({BookDaoJdbc.class, MessageServiceImpl.class, ApplicationSettings.class})
+@Import({BookDaoJdbc.class, AuthorDaoJdbc.class, GenreDaoJdbc.class})
 class BookDaoJdbcTest {
 
     private static final int BOOK_COUNT_NEW_BOOK = 1;
@@ -41,15 +38,21 @@ class BookDaoJdbcTest {
     @Autowired
     private BookDaoJdbc bookDaoJdbc;
 
+    @Autowired
+    private AuthorDaoJdbc authorDaoJdbc;
+
+    @Autowired
+    private GenreDaoJdbc genreDaoJdbc;
+
     @Test
     @DisplayName("добавление книги в базу")
-    void insert() throws BookExistException{
+    void insert() throws EntityExistException {
 
         List<Author> authors = new ArrayList<Author>();
-        authors.add(new Author(DEFAULT_AUTHOR_ID, ""));
+        authors.add(new Author(DEFAULT_AUTHOR_ID, DEFAULT_BOOK_AUTHOR));
 
         List<Genre> genres = new ArrayList<Genre>();
-        genres.add(new Genre(DEFAULT_GENRE_ID, ""));
+        genres.add(new Genre(DEFAULT_GENRE_ID, DEFAULT_BOOK_GENRE));
 
         Book book  = new Book(0L, NEW_BOOK_NAME, authors, genres);
         Book book2 = bookDaoJdbc.insert(book);

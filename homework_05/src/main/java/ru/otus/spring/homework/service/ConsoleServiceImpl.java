@@ -21,45 +21,45 @@ public class ConsoleServiceImpl implements ConsoleService {
         this.messageService  = messageService;
     }
 
-    public String ReadBookName() {
+    public String readBookName() {
         ioService.printOut(messageService.getMessage(TxtConst.BOOK_NAME));
         return ioService.readString();
     }
 
-    public Long ReadBookID() {
+    public Long readBookID() {
         ioService.printOut(messageService.getMessage(TxtConst.BOOK_ID));
         return ioService.readLong();
     }
 
-    public String ReadAuthor() {
+    public String readAuthor() {
         ioService.printOut(messageService.getMessage(TxtConst.AUTHOR_NAME ));
         return ioService.readString();
     }
 
-    public String ReadAGenre() {
+    public String readAGenre() {
         ioService.printOut(messageService.getMessage(TxtConst.GENRE_NAME ));
         return ioService.readString();
     }
 
-    public void ShowBooks(List<Book> books) {
+    public void showBooks(List<Book> books) {
         for (Book book : books) {
             ioService.printOutLn(book.getBookID().toString() + " - \"" + book.getName() + "\" " + book.AuthorsToString() + " [" + book.GenresToString()+"]");
         }
     }
 
-     public void ShowBook(Book book) {
+     public void showBook(Book book) {
          ioService.printOutLn(messageService.getMessage(TxtConst.BOOK_ID)+book.getBookID().toString());
          ioService.printOutLn(messageService.getMessage(TxtConst.BOOK_NAME)+book.getName());
          ioService.printOutLn(messageService.getMessage(TxtConst.AUTHOR_NAME)+book.AuthorsToString());
          ioService.printOutLn(messageService.getMessage(TxtConst.GENRE_NAME)+book.GenresToString());
     }
 
-    public void ShowAuthors(List<Author> authors) {
+    public void showAuthors(List<Author> authors) {
         for (Author author:authors)  {
             ioService.printOutLn(author.getAuthorID().toString()+" - "+author.getName());
         }
     }
-    public void ShowGenres(List<Genre> ganres) {
+    public void showGenres(List<Genre> ganres) {
         for (Genre ganre:ganres)  {
             ioService.printOutLn(ganre.getGenreID().toString()+" - "+ganre.getName());
         }
@@ -78,13 +78,13 @@ public class ConsoleServiceImpl implements ConsoleService {
     }
 
 
-    public void ShowBookOld(Book book) {
+    public void showBookOld(Book book) {
         ioService.printOutLn(messageService.getMessage(TxtConst.BOOK_NAME_OLD)+book.getName());
     }
-    public void ShowBookOldAuthors(Book book) {
+    public void showBookOldAuthors(Book book) {
         ioService.printOutLn(messageService.getMessage(TxtConst.AUTHOR_NAME_OLD)+book.AuthorsToString());
     }
-    public void ShowBookOldGenres(Book book) {
+    public void showBookOldGenres(Book book) {
         ioService.printOutLn(messageService.getMessage(TxtConst.GENRE_NAME_OLD)+book.GenresToString());
     }
 
