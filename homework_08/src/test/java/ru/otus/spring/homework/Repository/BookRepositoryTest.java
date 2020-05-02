@@ -82,9 +82,7 @@ class BookRepositoryTest extends AbstractRepositoryTest{
         Author author = authorRepository.findByName(DEFAULT_BOOK_AUTHOR).orElse(null);
         assertThat(author).isNotEqualTo(null);
         if (author != null) {
-            List<String> listid= new ArrayList<String>();
-            listid.add(author.getId());
-            List<Book> books = bookRepository.findByAuthorIdIn(listid);
+            List<Book> books = bookRepository.findByAuthorNameLike(DEFAULT_BOOK_AUTHOR);
             Assert.assertTrue(books.size() > 0);
         }
     }
@@ -95,9 +93,7 @@ class BookRepositoryTest extends AbstractRepositoryTest{
         Genre genre = genreRepository.findByName(DEFAULT_BOOK_GENRE).orElse(null);
         assertThat(genre).isNotEqualTo(null);
         if (genre != null) {
-            List<String> listid = new ArrayList<String>();
-            listid.add(genre.getId());
-            List<Book> books = bookRepository.findByGenreIdIn(listid);
+            List<Book> books = bookRepository.findByGenreNameLike(DEFAULT_BOOK_GENRE);
             Assert.assertTrue(books.size() > 0);
         }
     }

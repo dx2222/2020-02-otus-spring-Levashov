@@ -160,27 +160,12 @@ public class BookServiceImpl implements BookService {
     }
 
     public void findAllBookByAuthor() {
-        String author = consoleService.readAuthor();
-        List<Author> authors = authorRepository.findByNameLike(author);
+        consoleService.showBooks(bookRepository.findByAuthorNameLike(consoleService.readAuthor()));
 
-        List<String> authorsid = new ArrayList<>();
-        for (Author auther1:authors) {
-            authorsid.add(auther1.getId());
-        }
-
-        consoleService.showBooks(bookRepository.findByAuthorIdIn(authorsid));
     }
 
     public void findAllBookByGenre() {
-        String genre = consoleService.readAGenre();
-        List<Genre> genres = genreRepository.findByNameLike(genre);
-
-        List<String> genresid = new ArrayList<>();
-        for (Genre genre1:genres) {
-            genresid.add(genre1.getId());
-        }
-
-        consoleService.showBooks(bookRepository.findByGenreIdIn(genresid));
+        consoleService.showBooks(bookRepository.findByGenreNameLike(consoleService.readAGenre()));
     }
 
 
