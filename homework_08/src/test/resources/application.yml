@@ -1,0 +1,24 @@
+application:
+  locale: ru_RU
+
+spring:
+  messages:
+    basename: i18n.bundle
+    defaultencoding: "UTF-8"
+
+  data:
+    mongodb:
+      database: MongoDB
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+  shell:
+    interactive:
+      enabled: false
+
+logging:
+  level:
+    ROOT: INFO
