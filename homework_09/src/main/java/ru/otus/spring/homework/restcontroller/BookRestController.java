@@ -66,7 +66,7 @@ public class BookRestController {
         return "index";
     }
 
-    @PostMapping("/index/selectinset")
+    @GetMapping("/index/selectinset")
     public String bookInsetSelect(Model model) {
         Book book = Book.builder().id(0L).build();
         model.addAttribute("book", book);
