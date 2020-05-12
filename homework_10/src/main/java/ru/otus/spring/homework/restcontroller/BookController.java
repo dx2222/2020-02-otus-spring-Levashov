@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class BookController {
 
    @GetMapping({"/","/index"})
-    public String listPage(Model model) {
+    public String indexPage(Model model) {
         return "index";
     }
 }

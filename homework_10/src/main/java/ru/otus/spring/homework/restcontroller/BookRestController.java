@@ -23,19 +23,19 @@ public class BookRestController {
         this.commentService  = commentService;
     }
 
-    @GetMapping("/books")
-    public List<BookDto>  booksPage() {
+    @GetMapping("/book")
+    public List<BookDto>  bookAll() {
         return bookService.findAllBook().stream().map(BookDto::toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/book/{id}")
-    public BookDto bookPage(@PathVariable Long id) {
+    public BookDto bookByID(@PathVariable Long id) {
         return BookDto.toDto(bookService.selectBookByID(id));
     }
 
-    @GetMapping("/books/selectby")
+    @GetMapping("/book/selectby")
     public List<BookDto> bookSelectBy(@RequestParam("FindText") String findText,
-                                   @RequestParam("cbFindType") String findType) {
+                                      @RequestParam("cbFindType") String findType) {
         List<BookDto> books;
         switch (findType) {
             case "name":
@@ -54,37 +54,32 @@ public class BookRestController {
         return books;
     }
 
-    @GetMapping("/book/selectinsert")
-    public BookDto bookInsetSelect() {
-        return BookDto.builder().id(0L).name("").authors("").genres("").build();
-    }
-
-    @PostMapping("/book/insert")
+    @PostMapping("/book")
     public BookDto bookInset(@RequestBody BookDto book) {
         return BookDto.toDto(bookService.insertBook(book.getName(), book.getAuthors(), book.getGenres()));
     }
 
-    @PostMapping("/book/update")
+    @PutMapping("/book")
     public BookDto bookUpdate(@RequestBody BookDto book) {
         return BookDto.toDto(bookService.updateBook(book.getId(), book.getName(), book.getAuthors(), book.getGenres()));
     }
 
-    @DeleteMapping("/book/delete/{id}")
+    @DeleteMapping("/book/{id}")
     public void bookDelete(@PathVariable Long id) {
         bookService.deleteBook(id);
     }
 
-    @GetMapping("/comments/{id}")
-    public List<CommentDto> CommentPage(@PathVariable Long id) {
-        return commentService.selectCommentByBookID(id).stream().map(CommentDto::toDto).collect(Collectors.toList());
+    @GetMapping("/comment/{bookID}")
+    public List<CommentDto> CommentByBookID(@PathVariable Long bookID) {
+        return commentService.selectCommentByBookID(bookID).stream().map(CommentDto::toDto).collect(Collectors.toList());
     }
 
-    @PostMapping("/comment/insert")
+    @PostMapping("/comment")
     public CommentDto commentInsert(@RequestBody CommentDto comment) {
         return CommentDto.toDto(commentService.insertComment(comment.getBookID(), comment.getComment()));
     }
 
-    @DeleteMapping("/comment/delete/{id}")
+    @DeleteMapping("/comment/{id}")
     public void commentDelete(@PathVariable Long id) {
         commentService.deleteComment(id);
     }

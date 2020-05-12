@@ -25,26 +25,26 @@ function pageLoadedHandler() {
   if (locale == null) { locale = "ru";};
   setLocale(locale);
   
-  createBodyListBook();
+  createBodyBookList();
 }
 
 function setLang_RU(){
   setLocale("ru");
-  createBodyListBook();  
+  createBodyBookList();  
 }
 
 function setLang_EN(){
   setLocale("en");
-  createBodyListBook();  
+  createBodyBookList();  
 }
 
 function loadBookList(mode) {
 var URL; 
     
    if (mode == 0) {
-     URL = "/books";
+     URL = "/book";
    } else {
-     URL ="/books/selectby?FindText="+$("#FindText").val()+"&cbFindType="+$("#cbFindType").val();
+     URL ="/book/selectby?FindText="+$("#FindText").val()+"&cbFindType="+$("#cbFindType").val();
    };
     
    $.get(URL).done(function (books) {
@@ -68,7 +68,7 @@ var URL;
     });
 }
 
-function createBodyListBook() {
+function createBodyBookList() {
 
   $("title").remove();
   $("head").append(`<title>${LANG.loc_booklist}</title>`);
@@ -103,93 +103,98 @@ function createBodyListBook() {
   loadBookList(0);
 }
 
+function createBook(book) {
 
-function createBodyBook(bookid) {
-var URL; 
-    
-   if (bookid != 0) {
-     URL = "book/"+bookid;
-   } else {
-     URL ="/book/selectinsert";
-   };
- 
-  $("title ").remove();
-  $("head").append(`<title>${LANG.loc_book}</title>`);
+  $("body").empty();
+  $("body").append(`
 
-  $.get(URL).done(function (book) {
-     
-    $("body").empty();
-    
-    $("body").append(`
-    
-      <h3> 
-         <a class="link"  onclick="createBodyListBook()">${LANG.loc_backlist}</a>  
-      </h3>  
-    
+      <h3>
+         <a class="link"  onclick="createBodyBookList()">${LANG.loc_backlist}</a>
+      </h3>
+
       <h1>${LANG.loc_book}</h1>
-      
+
       <div>
-        <p>${LANG.loc_tittle}</p>	
+        <p>${LANG.loc_tittle}</p>
         <input id="BookName" type="text" class="name" placeholder="${LANG.loc_tittlehelp}" value="${book.name}">
-         
+
         <p>${LANG.loc_author}</p>
         <input id="Author"   type="text" class="name" placeholder="${LANG.loc_authorhelp}" value="${book.authors}">
-        
+
         <p>${LANG.loc_genre}</p>
         <input id="Genre"    type="text" class="name" placeholder="${LANG.loc_genrehelp}" value="${book.genres}">
-        
+
       </div>
-    `);  
+    `);
+
+  if (book.id != 0) {
+    $("body").append(`
+      <div id="modif" align="right" >
+        <button onclick="updateBook(${book.id})">${LANG.loc_update}</button>
+        <button onclick="deleteBook(${book.id})">${LANG.loc_delete}</button>
+      </div>
+    `);
+
+    $("body").append(`
+            <div class="comments">
+            </div>
+          `);
+
+    loadCommentList(book.id);
+
+  } else {
+    $("body").append(`
+      <div id="modif" align="right" >
+        <button onclick="insertBook()">${LANG.loc_insert}</button>
+      </div>
+    `);
+  };
+
+}
+
+
+function createBodyBook(bookid) {
+   
+  $("title ").remove();
+  $("head").append(`<title>${LANG.loc_book}</title>`);    
     
-    if (bookid != 0) {
-      $("body").append(`
-        <div id="modif" align="right" >
-          <button onclick="updateBook(${book.id})">${LANG.loc_update}</button>
-          <button onclick="deleteBook(${book.id})">${LANG.loc_delete}</button>
-        </div>
-      `);
-          
-      $("body").append(`
-              <div class="comments">
-              </div>
-            `); 
-          
-      loadCommentList(bookid);
-      
-    } else {
-      $("body").append(`
-        <div id="modif" align="right" >
-          <button onclick="insertBook()">${LANG.loc_insert}</button>
-        </div>
-      `);
-    };
-      
-  });
+  if (bookid != 0) {
+    $.get("book/"+bookid).done(function (book) {
+      createBook(book)});
+  } else {
+    book = {
+       id:0,
+       name:"",
+       authors:"",
+       genres:""
+    }
+    createBook(book);
+  };
 }
 
 function loadCommentList(bookid) {
- 
-   
- 
-   $.get('/comments/'+bookid).done(function (comments) {
+
+   $.get('/comment/'+bookid).done(function (comments) {
         $("div.comments").empty();
     
-        $("div.comments").append(`
-                <p>${LANG.loc_comment}</p>
-              `); 
-    
-        comments.forEach(function (comment) {
-            $('div.comments').append(`
-            
-            <ol>   
-              <p class = "comment" >${comment.comment}</p>
-              <p class = "commentdel"> 
-                 <button onclick="deleteComment(${comment.id}, ${bookid})">${LANG.loc_delete}</button>
-              </p>
-            </ol>
-            `);
-        });
-        
+        if (comments.length != 0) {
+          $("div.comments").append(`<p>${LANG.loc_comment}</p>`); 
+          
+          comments.forEach(function (comment) {
+              $('div.comments').append(`
+              
+              <ol>   
+                <p class = "comment" >${comment.comment}</p>
+                <p class = "commentdel"> 
+                   <button onclick="deleteComment(${comment.id}, ${bookid})">${LANG.loc_delete}</button>
+                </p>
+              </ol>
+              `);
+          });
+        } else {
+          $("div.comments").append(`<p> </p>`); 
+        }; 
+
       $('div.comments').append(`
           <p>${LANG.loc_commented}<Br>
             <input class = "comment" id = "comment" type="text" placeholder="${LANG.loc_commenthelp}">
@@ -202,7 +207,7 @@ function loadCommentList(bookid) {
 function insertBook(){
  
   $.ajax({
-      url: "/book/insert",
+      url: "/book",
       type: "POST",
       contentType: 'application/json',
       dataType: 'json',
@@ -211,14 +216,14 @@ function insertBook(){
                              authors: $("#Author").val() , 
                              genres: $("#Genre").val()
                            })
-      }).done(function() {createBodyListBook();});
+      }).done(function() {createBodyBookList();});
 }
 
 function updateBook(bookid){
  
   $.ajax({
-      url: "/book/update",
-      type: "POST",
+      url: "/book",
+      type: "PUT",
       contentType: 'application/json',
       dataType: 'json',
       data: JSON.stringify({
@@ -227,21 +232,21 @@ function updateBook(bookid){
                              authors: $("#Author").val() , 
                              genres: $("#Genre").val()
                            })
-      }).done(function() {createBodyListBook();});
+      }).done(function() {createBodyBookList();});
 }
 
 function deleteBook(bookid){
  
   $.ajax({
-      url: "/book/delete/"+bookid,
+      url: "/book/"+bookid,
       type: "DELETE"
-    }).done(function() {createBodyListBook();});
+    }).done(function() {createBodyBookList();});
 }
 
 function insertComment(bookid) {
  
   $.ajax({
-      url: "/comment/insert",
+      url: "/comment",
       type: "POST",
       contentType: 'application/json',
       dataType: 'json',
@@ -255,7 +260,7 @@ function insertComment(bookid) {
 function deleteComment(id, bookid) {
  
   $.ajax({
-      url: "/comment/delete/"+id,
+      url: "/comment/"+id,
       type: "DELETE"
   }).done(function() {createBodyBook(bookid);});
 }

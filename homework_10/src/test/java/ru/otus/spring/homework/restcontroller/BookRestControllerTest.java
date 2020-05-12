@@ -67,7 +67,7 @@ public class BookRestControllerTest {
 
         Mockito.when(bookService.findAllBook()).thenReturn(books);
 
-        mvc.perform(get("/books"))
+        mvc.perform(get("/book"))
                  .andExpect(status().isOk())
                  .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                  .andExpect(jsonPath("$[0].name",Matchers.is(DEAULT_BOOK_NAME)))

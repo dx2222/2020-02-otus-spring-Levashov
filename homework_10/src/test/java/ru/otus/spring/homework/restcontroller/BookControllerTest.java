@@ -23,7 +23,7 @@ public class BookControllerTest {
     private MockMvc mvc;
 
     @Test
-    public void listPageTest() throws Exception {
+    public void indexPageTest() throws Exception {
         mvc.perform(get("/")).andExpect(status().isOk());
     }
 
