@@ -1,0 +1,23 @@
+server:
+  port: 7081
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  hibernate:
+    current_session_context_class: thread
+
+  liquibase:
+    change-log: classpath:liquibase/rootChangeLog.xml
+
+logging:
+  level:
+    ROOT: info
