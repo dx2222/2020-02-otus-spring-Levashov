@@ -70,7 +70,7 @@ public class BookRestController {
     }
 
     @GetMapping("/comment/{bookID}")
-    public List<CommentDto> CommentByBookID(@PathVariable Long bookID) {
+    public List<CommentDto> commentByBookID(@PathVariable Long bookID) {
         return commentService.selectCommentByBookID(bookID).stream().map(CommentDto::toDto).collect(Collectors.toList());
     }
 
