@@ -1,0 +1,11 @@
+server:
+  port: 7081
+
+spring:
+  data:
+    mongodb:
+      database: MongoDB
+
+logging:
+  level:
+    ROOT: INFO
