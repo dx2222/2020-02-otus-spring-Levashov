@@ -1,0 +1,41 @@
+﻿<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="style.css" th:href="@{/css/style.css}"/>
+    <title th:text="#{loc.booklist}">Список книг</title>
+  </head>
+  
+  <body>
+    <div>
+       <a href="index?lang=en">EN</a>
+       <a href="index?lang=ru">RU</a>
+    </div>
+  
+    <form>  
+      <div id="find" >
+        <input name="FindText" type="text" style=" WIDTH: 40%" th:placeholder="#{loc.findstirng}" placeholder="иведите строку поиска" >
+        <select name="cbFindType" style="WIDTH: 25%">
+          <option value="all" th:text="#{loc.findallbook}" >вёывести все книги</option>
+          <option value="name" th:text="#{loc.findname}">по названию</option>
+          <option value="author" th:text="#{loc.findauthor}">по автору</option>
+          <option value="genre" th:text="#{loc.findgenre}">по пожанру</option>
+        </select>
+        <button name = "buFind"   type="submit"  value="" style="WIDTH: 10%" 
+                formaction="index.html" th:formaction="@{/index/selectby}" formmethod = "GET" th:text="#{loc.find}" >Искать</button>
+      </div>
+    </form>	
+    
+    <h1 th:text="#{loc.booklist}">Список книг</h1>
+   
+    <ol th:each="book : ${books}">
+      <h2> 
+         <a href = "book.html" th:href="@{/book(id=${book.id})}" th:text="${book.name}">BOOK</a>  
+         <span class="author" th:text="${book.authors}">AUTHOR</span>
+         <span class="author">[ </span> 
+         <span class="author" th:text="${book.genres}">GENRE</span>
+         <span class="author"> ]</span> 
+      </h2>
+    </ol>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+﻿<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="style.css" th:href="@{/css/style.css}"/>
+    <title th:text="#{loc.book}">Книга</title>
+  </head>
+  
+	 <body>
+    <h3> 
+       <a href = "/index" th:text="#{loc.backlist}">Вернуться к списку</a>  
+    </h3>  
+  
+	   <h1 th:text="#{loc.book}">Книга</h1>
+    
+    <form > 
+      <div>
+        <p th:text="#{loc.tittle}">Название</p>	
+        <input name = "BookName" type="text" class="name"  th:placeholder="#{loc.tittlehelp}" placeholder="название книги" value="" th:value="${book.name}">
+        	
+        <p th:text="#{loc.author}">Список авторов</p>
+        <input name = "Author" type="text" class="name"  th:placeholder="#{loc.authorhelp}" placeholder="список авторов" value="" th:value="${book.authors}">
+        
+        <p th:text="#{loc.genre}">Жанр</p>
+        <input name = "Genre" type="text" class="name"  th:placeholder="#{loc.genrehelp}" placeholder="жанры" value="" th:value="${book.genres}">
+        
+      </div>
+   
+      <div id="modif" align="right" >
+        <button type="submit" formaction="book.html" th:formaction="@{/book/update(id=${book.id})}" formmethod = "POST" th:text="#{loc.update}">Изменить</button>
+        <button type="submit" formaction="book.html" th:formaction="@{/book/delete(id=${book.id})}" formmethod = "POST" th:text="#{loc.delete}">Удалить</button>
+      </div>
+    </form> 
+		
+    <p class="name" th:text="#{loc.comment}">Комментарии<br>
+      <ol th:each="comment : ${comments}">   
+        <form action="book.html" th:action="@{/comment/delete(id=${comment.id},bookid=${comment.bookID})}">
+          <p class = "comment" th:text="${comment.comment}"></p>
+          <p class = "commentdel"> <button type="submit" formmethod = "POST" th:text="#{loc.delete}">Удалить</button></p>
+        </form>
+      </ol>
+      
+      <p th:text="#{loc.commented}">Комментировать<Br>
+        <form >
+          <input class = "comment" name = "comment" type="text" th:placeholder="#{loc.commenthelp}" placeholder="комментарий">
+          <button type="submit" formaction="book.html" th:formaction="@{/comment/insert(bookid=${book.id})}" formmethod = "POST" th:text="#{loc.insert}">Добавить</button> 
+        </form>
+      </p>
+    </p>
+	 </body>
+</html>
