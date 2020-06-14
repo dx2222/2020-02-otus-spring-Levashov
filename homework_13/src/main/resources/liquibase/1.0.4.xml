@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<property name="autoIncrement" value="false" dbms="postgresql,mssql,oracle"/>
+	<property name="autoIncrement" value="true" dbms="h2"/>
+
+
+	<changeSet id="1.0.4.01" author="ЛЕВАШОВ Д.А." runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="acl_sid"/>
+				<sqlCheck expectedResult="0">select count(1) from acl_sid</sqlCheck>
+			</and>
+		</preConditions>
+
+		<insert tableName="acl_sid"><column name="id" valueNumeric="11"/><column name="principal" value="1"/><column name="sid" value="admin1"/></insert>
+		<insert tableName="acl_sid"><column name="id" valueNumeric="12"/><column name="principal" value="1"/><column name="sid" value="user1"/></insert>
+		<insert tableName="acl_sid"><column name="id" valueNumeric="13"/><column name="principal" value="1"/><column name="sid" value="user2"/></insert>
+		<insert tableName="acl_sid"><column name="id" valueNumeric="14"/><column name="principal" value="0"/><column name="sid" value="ROLE_ADMIN"/></insert>
+		<insert tableName="acl_sid"><column name="id" valueNumeric="15"/><column name="principal" value="0"/><column name="sid" value="ROLE_USER"/></insert>
+
+		<insert tableName="acl_class"><column name="id" valueNumeric="101"/><column name="class" value="ru.otus.spring.homework.domain.Book"/></insert>
+		<insert tableName="acl_class"><column name="id" valueNumeric="102"/><column name="class" value="ru.otus.spring.homework.domain.Comment"/></insert>
+
+
+		<insert tableName="acl_object_identity">
+			<column name="id" valueNumeric="1001"/>
+			<column name="object_id_class" value="101"/>
+			<column name="object_id_identity" value="100"/>
+			<column name="parent_object" value="NULL"/>
+			<column name="owner_sid" value="12"/>
+			<column name="entries_inheriting" value="0"/>
+		</insert>
+
+		<insert tableName="acl_object_identity">
+			<column name="id" valueNumeric="1002"/>
+			<column name="object_id_class" value="101"/>
+			<column name="object_id_identity" value="101"/>
+			<column name="parent_object" value="NULL"/>
+			<column name="owner_sid" value="12"/>
+			<column name="entries_inheriting" value="0"/>
+		</insert>
+
+		<insert tableName="acl_object_identity">
+			<column name="id" valueNumeric="1003"/>
+			<column name="object_id_class" value="101"/>
+			<column name="object_id_identity" value="102"/>
+			<column name="parent_object" value="NULL"/>
+			<column name="owner_sid" value="13"/>
+			<column name="entries_inheriting" value="0"/>
+		</insert>
+
+		<insert tableName="acl_object_identity">
+			<column name="id" valueNumeric="1004"/>
+			<column name="object_id_class" value="102"/>
+			<column name="object_id_identity" value="100"/>
+			<column name="parent_object" value="NULL"/>
+			<column name="owner_sid" value="12"/>
+			<column name="entries_inheriting" value="0"/>
+		</insert>
+
+		<insert tableName="acl_object_identity">
+			<column name="id" valueNumeric="1005"/>
+			<column name="object_id_class" value="102"/>
+			<column name="object_id_identity" value="101"/>
+			<column name="parent_object" value="NULL"/>
+			<column name="owner_sid" value="12"/>
+			<column name="entries_inheriting" value="0"/>
+		</insert>
+
+		<insert tableName="acl_object_identity">
+			<column name="id" valueNumeric="1006"/>
+			<column name="object_id_class" value="102"/>
+			<column name="object_id_identity" value="102"/>
+			<column name="parent_object" value="NULL"/>
+			<column name="owner_sid" value="13"/>
+			<column name="entries_inheriting" value="0"/>
+		</insert>
+
+		<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+		<insert tableName="acl_entry">
+			<column name="id" valueNumeric="1"/>
+			<column name="acl_object_identity" value="1001"/>
+			<column name="ace_order" value="1"/>
+			<column name="sid" value="12"/>
+			<column name="mask" value="2"/>
+			<column name="granting" value="1"/>
+			<column name="audit_success" value="1"/>
+			<column name="audit_failure" value="1"/>
+		</insert>
+
+		<insert tableName="acl_entry">
+			<column name="id" valueNumeric="2"/>
+			<column name="acl_object_identity" value="1002"/>
+			<column name="ace_order" value="1"/>
+			<column name="sid" value="12"/>
+			<column name="mask" value="2"/>
+			<column name="granting" value="1"/>
+			<column name="audit_success" value="1"/>
+			<column name="audit_failure" value="1"/>
+		</insert>
+
+		<insert tableName="acl_entry">
+			<column name="id" valueNumeric="3"/>
+			<column name="acl_object_identity" value="1003"/>
+			<column name="ace_order" value="1"/>
+			<column name="sid" value="13"/>
+			<column name="mask" value="2"/>
+			<column name="granting" value="1"/>
+			<column name="audit_success" value="1"/>
+			<column name="audit_failure" value="1"/>
+		</insert>
+
+		<insert tableName="acl_entry">
+			<column name="id" valueNumeric="4"/>
+			<column name="acl_object_identity" value="1004"/>
+			<column name="ace_order" value="2"/>
+			<column name="sid" value="12"/>
+			<column name="mask" value="2"/>
+			<column name="granting" value="1"/>
+			<column name="audit_success" value="1"/>
+			<column name="audit_failure" value="1"/>
+		</insert>
+
+		<insert tableName="acl_entry">
+			<column name="id" valueNumeric="5"/>
+			<column name="acl_object_identity" value="1005"/>
+			<column name="ace_order" value="2"/>
+			<column name="sid" value="12"/>
+			<column name="mask" value="2"/>
+			<column name="granting" value="1"/>
+			<column name="audit_success" value="1"/>
+			<column name="audit_failure" value="1"/>
+		</insert>
+
+		<insert tableName="acl_entry">
+			<column name="id" valueNumeric="6"/>
+			<column name="acl_object_identity" value="1006"/>
+			<column name="ace_order" value="2"/>
+			<column name="sid" value="13"/>
+			<column name="mask" value="2"/>
+			<column name="granting" value="1"/>
+			<column name="audit_success" value="1"/>
+			<column name="audit_failure" value="1"/>
+		</insert>
+	</changeSet>
+
+    </databaseChangeLog>

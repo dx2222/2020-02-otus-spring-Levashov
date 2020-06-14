@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<property name="autoIncrement" value="false" dbms="postgresql,mssql,oracle"/>
+	<property name="autoIncrement" value="true" dbms="h2"/>
+
+	<changeSet id="1.0.2.01" author="ЛЕВАШОВ Д.А." runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="BOOK"/>
+				<sqlCheck expectedResult="0">select count(1) from BOOK</sqlCheck>
+			</and>
+		</preConditions>
+
+		<insert tableName="BOOK"><column name="ID" valueNumeric="100"/><column name="NAME" value="BOOK1"/></insert>
+		<insert tableName="BOOK"><column name="ID" valueNumeric="101"/><column name="NAME" value="BOOK2"/></insert>
+		<insert tableName="BOOK"><column name="ID" valueNumeric="102"/><column name="NAME" value="BOOK3"/></insert>
+
+		<insert tableName="AUTHOR"><column name="ID" valueNumeric="100"/><column name="NAME" value="AUTHOR1"/></insert>
+		<insert tableName="AUTHOR"><column name="ID" valueNumeric="101"/><column name="NAME" value="AUTHOR2"/></insert>
+		<insert tableName="AUTHOR"><column name="ID" valueNumeric="102"/><column name="NAME" value="AUTHOR3"/></insert>
+
+		<insert tableName="GENRE"><column name="ID" valueNumeric="100"/><column name="NAME" value="GENRE1"/></insert>
+		<insert tableName="GENRE"><column name="ID" valueNumeric="101"/><column name="NAME" value="GENRE2"/></insert>
+		<insert tableName="GENRE"><column name="ID" valueNumeric="102"/><column name="NAME" value="GENRE3"/></insert>
+
+		<insert tableName="COMMENT"><column name="ID" valueNumeric="100"/><column name="BOOK_ID" valueNumeric="100"/><column name="COMMENT" value="COMMENT1"/></insert>
+		<insert tableName="COMMENT"><column name="ID" valueNumeric="101"/><column name="BOOK_ID" valueNumeric="100"/><column name="COMMENT" value="COMMENT2"/></insert>
+		<insert tableName="COMMENT"><column name="ID" valueNumeric="102"/><column name="BOOK_ID" valueNumeric="100"/><column name="COMMENT" value="COMMENT3"/></insert>
+
+		<insert tableName="BOOK_AUTHOR"><column name="BOOK_ID" valueNumeric="100"/><column name="AUTHOR_ID" value="100"/></insert>
+		<insert tableName="BOOK_AUTHOR"><column name="BOOK_ID" valueNumeric="101"/><column name="AUTHOR_ID" value="101"/></insert>
+		<insert tableName="BOOK_AUTHOR"><column name="BOOK_ID" valueNumeric="101"/><column name="AUTHOR_ID" value="102"/></insert>
+		<insert tableName="BOOK_AUTHOR"><column name="BOOK_ID" valueNumeric="102"/><column name="AUTHOR_ID" value="100"/></insert>
+		<insert tableName="BOOK_AUTHOR"><column name="BOOK_ID" valueNumeric="102"/><column name="AUTHOR_ID" value="102"/></insert>
+
+		<insert tableName="BOOK_GENRE"><column name="BOOK_ID" valueNumeric="100"/><column name="GENRE_ID" value="100"/></insert>
+		<insert tableName="BOOK_GENRE"><column name="BOOK_ID" valueNumeric="101"/><column name="GENRE_ID" value="101"/></insert>
+		<insert tableName="BOOK_GENRE"><column name="BOOK_ID" valueNumeric="101"/><column name="GENRE_ID" value="102"/></insert>
+		<insert tableName="BOOK_GENRE"><column name="BOOK_ID" valueNumeric="102"/><column name="GENRE_ID" value="100"/></insert>
+		<insert tableName="BOOK_GENRE"><column name="BOOK_ID" valueNumeric="102"/><column name="GENRE_ID" value="102"/></insert>
+	</changeSet>
+
+
+        <changeSet id="1.0.2.02" author="ЛЕВАШОВ Д.А." runInTransaction="false">
+            <preConditions onFail="MARK_RAN">
+                <and>
+                    <tableExists tableName="USER"/>
+                    <sqlCheck expectedResult="0">select count(1) from USER</sqlCheck>
+                </and>
+            </preConditions>
+
+            <insert tableName="USER">
+				 <column name="ID" valueNumeric="1"/>
+			     <column name="USERNAME" value="user1"/>
+				 <column name="PASSWORD" value="123456"/>
+				 <column name="ROLES" value="ROLE_USER"/>
+			</insert>
+            <insert tableName="USER">
+				<column name="ID" valueNumeric="2"/>
+				<column name="USERNAME" value="admin1"/>
+				<column name="PASSWORD" value="654321"/>
+				<column name="ROLES" value="ROLE_USER,ROLE_ADMIN"/>
+			</insert>
+			<insert tableName="USER">
+				<column name="ID" valueNumeric="3"/>
+				<column name="USERNAME" value="user2"/>
+				<column name="PASSWORD" value="112233"/>
+				<column name="ROLES" value="ROLE_USER"/>
+			</insert>
+
+        </changeSet>
+
+
+    </databaseChangeLog>
