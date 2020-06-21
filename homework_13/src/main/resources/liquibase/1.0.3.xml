@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<property name="autoIncrement" value="false" dbms="postgresql,mssql,oracle"/>
+	<property name="autoIncrement" value="true" dbms="h2"/>
+
+	<changeSet id="1.0.3.01" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="acl_sid"/>
+			</not>
+		</preConditions>
+
+		<createSequence sequenceName="acl_sid_seq" incrementBy="1" startValue="1"/>
+
+		<createTable tableName="acl_sid">
+			<column name="ID" type="bigint(20)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="acl_sid_seq">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="principal" type="tinyint(1)" defaultValue=" " remarks="principal" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="sid" type="VARCHAR(255)" defaultValue=" " remarks="sid" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createIndex tableName="acl_sid" indexName="XPKacl_sid" unique="true">
+			<column name="ID"/>
+		</createIndex>
+
+		<createIndex tableName="acl_sid" indexName="unique_uk_1" unique="true">
+			<column name="sid"/>
+			<column name="principal"/>
+		</createIndex>
+	</changeSet>
+
+
+	<changeSet id="1.0.3.02" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="acl_class"/>
+			</not>
+		</preConditions>
+
+		<createSequence sequenceName="acl_class_seq" incrementBy="1" startValue="1"/>
+
+		<createTable tableName="acl_class">
+			<column name="ID" type="bigint(20)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="acl_class_seq">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="class" type="VARCHAR(255)" defaultValue=" " remarks="class" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createIndex tableName="acl_class" indexName="XPKacl_class" unique="true">
+			<column name="ID"/>
+		</createIndex>
+
+		<createIndex tableName="acl_class" indexName="unique_uk_2" unique="true">
+			<column name="class"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="1.0.3.3" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="acl_object_identity"/>
+			</not>
+		</preConditions>
+
+		<createSequence sequenceName="acl_object_identity_seq" incrementBy="1" startValue="1"/>
+
+		<createTable tableName="acl_object_identity">
+			<column name="ID" type="bigint(20)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="acl_object_identity_seq">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="object_id_class" type="bigint(20)" defaultValue=" " remarks="object_id_class" autoIncrement="false">
+				<constraints nullable="false" foreignKeyName="fk_object_id_class" references="acl_class(id)"/>
+			</column>
+			<column name="object_id_identity" type="bigint(20)" defaultValue=" " remarks="object_id_identity" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="parent_object" type="bigint(20)" defaultValue=" " remarks="parent_object" autoIncrement="false">
+				<constraints nullable="false" foreignKeyName="fk_parent_object" references="acl_object_identity(id)"/>
+			</column>
+			<column name="owner_sid" type="bigint(20)" defaultValue=" " remarks="owner_sid" autoIncrement="false">
+				<constraints nullable="false" foreignKeyName="fk_owner_sid" references="acl_sid(id)"/>
+			</column>
+			<column name="entries_inheriting" type="tinyint(1)" defaultValue=" " remarks="entries_inheriting" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createIndex tableName="acl_object_identity" indexName="XPKacl_object_identity" unique="true">
+			<column name="ID"/>
+		</createIndex>
+
+		<createIndex tableName="acl_object_identity" indexName="unique_uk_3" unique="true">
+			<column name="object_id_class"/>
+			<column name="object_id_identity"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="1.0.3.04" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="acl_entry"/>
+			</not>
+		</preConditions>
+
+		<createSequence sequenceName="acl_entry_seq" incrementBy="1" startValue="1"/>
+
+		<createTable tableName="acl_entry">
+			<column name="ID" type="bigint(20)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="acl_entry_seq">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="acl_object_identity" type="bigint(20)" defaultValue=" " remarks="acl_object_identity" autoIncrement="false">
+				<constraints nullable="false" foreignKeyName="fk_acl_object_identity" references="acl_object_identity(id)"/>
+			</column>
+			<column name="ace_order" type="int(11)" defaultValue=" " remarks="ace_order" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="sid" type="bigint(20)" defaultValue=" " remarks="sid" autoIncrement="false">
+				<constraints nullable="false" foreignKeyName="fk_acl_sid" references="acl_sid(id)"/>
+			</column>
+			<column name="mask" type="int(11)" defaultValue=" " remarks="mask" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="granting" type="tinyint(1)" defaultValue=" " remarks="granting" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="audit_success" type="tinyint(1)" defaultValue=" " remarks="audit_success" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="audit_failure" type="tinyint(1)" defaultValue=" " remarks="audit_failure" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createIndex tableName="acl_entry" indexName="XPKacl_entry" unique="true">
+			<column name="ID"/>
+		</createIndex>
+
+		<createIndex tableName="acl_entry" indexName="unique_uk_4" unique="true">
+			<column name="acl_object_identity"/>
+			<column name="ace_order"/>
+		</createIndex>
+	</changeSet>
+
+    </databaseChangeLog>
