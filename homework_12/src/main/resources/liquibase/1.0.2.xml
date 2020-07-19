@@ -57,13 +57,13 @@
 				 <column name="ID" valueNumeric="1"/>
 			     <column name="USERNAME" value="user1"/>
 				 <column name="PASSWORD" value="123456"/>
-				 <column name="ROLES" value="USER"/>
+				 <column name="ROLES" value="ROLE_USER"/>
 			</insert>
             <insert tableName="USER">
 				<column name="ID" valueNumeric="2"/>
 				<column name="USERNAME" value="admin1"/>
 				<column name="PASSWORD" value="654321"/>
-				<column name="ROLES" value="USER,ADMIN"/>
+				<column name="ROLES" value="ROLE_USER,ROLE_ADMIN"/>
 			</insert>
 
         </changeSet>
