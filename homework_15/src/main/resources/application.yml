@@ -1,0 +1,13 @@
+groomer:
+  name: "Специалист"
+  minCoatLength: 1
+  maxDecCoatLength: 5
+  location: "Груминг-студия"
+
+location:
+  LOCATION_HOME: "Дом"
+  LOCATION_GROOMING_STUDIO: "Груминг-студия"
+
+logging:
+  level:
+    ROOT: info
