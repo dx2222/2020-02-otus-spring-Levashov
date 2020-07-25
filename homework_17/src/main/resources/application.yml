@@ -1,0 +1,48 @@
+server:
+  port: 7081
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics,logfile,health
+
+  health:
+    defaults:
+      enabled: true
+    show-details: always
+
+  logging:
+    file:
+      path: c:\
+      name:  WebBookBase.log
+
+  metrics:
+    export:
+      atlas:
+        uri: https://atlas.example.com:7101/api/v1/publish
+
+spring:
+  datasource:
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    initialization-mode: always
+
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  hibernate:
+    current_session_context_class: thread
+
+  liquibase:
+    change-log: classpath:liquibase/rootChangeLog.xml
+
+logging:
+  level:
+    ROOT: info
