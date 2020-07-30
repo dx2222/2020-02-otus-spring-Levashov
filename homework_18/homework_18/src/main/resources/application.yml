@@ -1,0 +1,82 @@
+server:
+  port: 7081
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics,logfile,health
+
+  health:
+    defaults:
+      enabled: true
+    show-details: always
+
+  logging:
+    file:
+      path: c:\
+      name:  WebBookBase.log
+
+  metrics:
+    export:
+      atlas:
+        uri: https://atlas.example.com:7101/api/v1/publish
+
+spring:
+  application:
+    name: WebBookBaseApplication
+
+  sleuth:
+    sampler:
+      probability: 100
+
+  zipkin:
+    baseUrl: http://localhost:9411
+
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    #url: jdbc:h2:tcp://localhost/~/test
+    initialization-mode: always
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  hibernate:
+    current_session_context_class: thread
+
+  liquibase:
+    change-log: classpath:liquibase/rootChangeLog.xml
+
+logging:
+  level:
+    ROOT: info
+
+hystrix:
+  command:
+    getBookList:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000
+
+turbine:
+  app-config: WebBookBaseApplication
+  cluster-name-expression: new String("default")
+
+eureka:
+  client:
+    enabled: true
+    fetchRegistry: true
+    registerWithEureka: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka
+  instance:
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 30
+    instance-id: ${spring.application.name}:${server.port}
