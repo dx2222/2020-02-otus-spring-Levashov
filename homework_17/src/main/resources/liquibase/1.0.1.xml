@@ -90,7 +90,7 @@
 			<column name="ID" type="NUMERIC(19, 0)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="COMMENT_seq">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue=" " remarks="BOOK_ID" autoIncrement="false">
+			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="BOOK_ID" autoIncrement="false">
 				<constraints nullable="false"/>
 			</column>
 			<column name="COMMENT" type="VARCHAR(255)" defaultValue=" " remarks="COMMENT" autoIncrement="false">
@@ -112,10 +112,10 @@
 		</preConditions>
 
 		<createTable tableName="BOOK_AUTHOR">
-			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue=" " remarks="BOOK_ID" autoIncrement="false">
+			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="BOOK_ID" autoIncrement="false">
 				<constraints nullable="false"/>
 			</column>
-			<column name="AUTHOR_ID" type="NUMERIC(19, 0)" defaultValue=" " remarks="AUTHOR_ID" autoIncrement="false">
+			<column name="AUTHOR_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="AUTHOR_ID" autoIncrement="false">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
@@ -138,10 +138,10 @@
 		</preConditions>
 
 		<createTable tableName="BOOK_GENRE">
-			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue=" " remarks="BOOK_ID" autoIncrement="false">
+			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="BOOK_ID" autoIncrement="false">
 				<constraints nullable="false"/>
 			</column>
-			<column name="GENRE_ID" type="NUMERIC(19, 0)" defaultValue=" " remarks="GENRE_ID" autoIncrement="false">
+			<column name="GENRE_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="GENRE_ID" autoIncrement="false">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
