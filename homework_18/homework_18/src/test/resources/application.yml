@@ -26,3 +26,10 @@ logging:
   level:
     ROOT: info
 
+hystrix:
+  command:
+    getBookList:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
