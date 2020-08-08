@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<property name="autoIncrement" value="false" dbms="postgresql,mssql,oracle"/>
+	<property name="autoIncrement" value="true" dbms="h2"/>
+
+	<changeSet id="1.0.1.01" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="AUTHOR"/>
+			</not>
+		</preConditions>
+
+		<createSequence sequenceName="AUTHOR_seq" incrementBy="1" startValue="1"/>
+
+		<createTable tableName="AUTHOR">
+			<column name="ID" type="NUMERIC(19, 0)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="AUTHOR_seq">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="NAME" type="VARCHAR(255)" defaultValue=" " remarks="NAME" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createIndex tableName="AUTHOR" indexName="XPKAUTHOR" unique="true">
+			<column name="ID"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="1.0.1.02" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="GENRE"/>
+			</not>
+		</preConditions>
+
+		<createSequence sequenceName="GENRE_seq" incrementBy="1" startValue="1"/>
+
+		<createTable tableName="GENRE">
+			<column name="ID" type="NUMERIC(19, 0)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="GENRE_seq">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="NAME" type="VARCHAR(255)" defaultValue=" " remarks="NAME" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createIndex tableName="GENRE" indexName="XPKGENRE" unique="true">
+			<column name="ID"/>
+		</createIndex>
+	</changeSet>
+
+
+	<changeSet id="1.0.1.03" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="BOOK"/>
+			</not>
+		</preConditions>
+
+		<createSequence sequenceName="BOOK_seq" incrementBy="1" startValue="1"/>
+
+		<createTable tableName="BOOK">
+			<column name="ID" type="NUMERIC(19, 0)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="BOOK_seq">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="NAME" type="VARCHAR(255)" defaultValue=" " remarks="NAME" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createIndex tableName="BOOK" indexName="XPKBOOK" unique="true">
+			<column name="ID"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="1.0.1.04" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="COMMENT"/>
+			</not>
+		</preConditions>
+
+		<createSequence sequenceName="COMMENT_seq" incrementBy="1" startValue="1"/>
+
+		<createTable tableName="COMMENT">
+			<column name="ID" type="NUMERIC(19, 0)" autoIncrement="${autoIncrement}" defaultValueSequenceNext="COMMENT_seq">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="BOOK_ID" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="COMMENT" type="VARCHAR(255)" defaultValue=" " remarks="COMMENT" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+
+		</createTable>
+
+		<createIndex tableName="COMMENT" indexName="XPKCOMMENT" unique="true">
+			<column name="ID"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="1.0.1.05" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="BOOK_AUTHOR"/>
+			</not>
+		</preConditions>
+
+		<createTable tableName="BOOK_AUTHOR">
+			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="BOOK_ID" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="AUTHOR_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="AUTHOR_ID" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint baseTableName="BOOK_AUTHOR" baseColumnNames="BOOK_ID"
+								 constraintName="BOOK_AUTHOR_BOOK_ID" onDelete="CASCADE"
+								 referencedTableName="BOOK"  referencedColumnNames="ID"/>
+
+		<addForeignKeyConstraint baseTableName="BOOK_AUTHOR" baseColumnNames="AUTHOR_ID"
+								 constraintName="BOOK_AUTHOR_AUTHOR_ID" onDelete="CASCADE"
+								 referencedTableName="AUTHOR"  referencedColumnNames="ID"/>
+
+	</changeSet>
+
+	<changeSet id="1.0.1.06" author="ЛЕВАШОВ Д.А." context="update" runInTransaction="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="BOOK_GENRE"/>
+			</not>
+		</preConditions>
+
+		<createTable tableName="BOOK_GENRE">
+			<column name="BOOK_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="BOOK_ID" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GENRE_ID" type="NUMERIC(19, 0)" defaultValue="0" remarks="GENRE_ID" autoIncrement="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint baseTableName="BOOK_GENRE" baseColumnNames="BOOK_ID"
+								 constraintName="BOOK_GENRE_BOOK_ID" onDelete="CASCADE"
+								 referencedTableName="BOOK"  referencedColumnNames="ID"/>
+
+		<addForeignKeyConstraint baseTableName="BOOK_GENRE" baseColumnNames="GENRE_ID"
+								 constraintName="BOOK_GENRE_GENRE_ID" onDelete="CASCADE"
+								 referencedTableName="GENRE"  referencedColumnNames="ID"/>
+
+	</changeSet>
+
+
+
+
+</databaseChangeLog>
